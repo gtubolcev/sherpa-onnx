@@ -12,17 +12,20 @@ jobs:
           distribution: temurin
           java-version: 17
       - uses: gradle/actions/setup-gradle@v3
-      - name: Install model
+
+      - name: Download model
         run: |
-          mkdir -p android/SherpaOnnxSimulateStreamingAsr/app/src/main/assets
-          cp -r android/SherpaOnnxJavaDemo/app/src/main/assets/vosk-model-streaming-ru \
-                android/SherpaOnnxSimulateStreamingAsr/app/src/main/assets/
+          mkdir -p android/SherpaOnnx/app/src/main/assets
+          cd android/SherpaOnnx/app/src/main/assets
+          git clone https://huggingface.co/alphacep/vosk-model-streaming-ru
+
       - name: Build
         run: |
-          cd android/SherpaOnnxSimulateStreamingAsr
+          cd android/SherpaOnnx
           chmod +x gradlew
           ./gradlew assembleDebug
+
       - uses: actions/upload-artifact@v4
         with:
-          name: sherpa-streaming-apk
-          path: android/SherpaOnnxSimulateStreamingAsr/app/build/outputs/apk/debug/*.apk
+          name: sherpa-real-apk
+          path: android/SherpaOnnx/app/build/outputs/apk/debug/*.apk
